@@ -47,6 +47,7 @@ parsed_csv.each do |row|
   
   foo_duration = duration_converter(row["FooDuration"])
   bar_duration = duration_converter(row["BarDuration"])
+  total_duration = foo_duration + bar_duration
 
   # testing output
   puts time
@@ -56,7 +57,7 @@ parsed_csv.each do |row|
   puts row["Address"].encode("UTF-8")
   puts foo_duration
   puts bar_duration
-  puts foo_duration + bar_duration
+  puts total_duration
 
   # save into new hash ensure utf-8 on object
 end

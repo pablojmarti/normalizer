@@ -1,2 +1,13 @@
 #!/usr/bin/env ruby
+require 'csv'
 
+# TODO: create options parser that will explain how this script will work
+
+# check to see if anything is passed to stdin
+input_csv = (STDIN.tty?) ? 1 : $stdin.read
+
+# fail if no stdin given
+raise "No STDIN given" if input_csv.equal?(1)
+
+# grab csv from standard out
+parsed_csv = CSV.parse(input_csv, headers: true)

@@ -26,9 +26,10 @@ parsed_csv.each do |row|
   full_name = row["FullName"].upcase.encode("UTF-8")
   
   # testing output
-  puts time.to_s.encode("UTF-8")
-  puts zip.encode("UTF-8")
+  puts time
+  puts zip
   puts full_name
+  puts row["Address"].encode("UTF-8")
 
   # save into new hash ensure utf-8 on object
 end

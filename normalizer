@@ -16,16 +16,19 @@ parsed_csv.each do |row|
 
   # here we interpolate the timezone (US /PST) to be included in the row and then call 
   # new offset to get the time zone to be in US/EST
-  time = DateTime.strptime("#{row['Timestamp']}-800", '%m/%d/%y %H:%M:%S %p%z').new_offset("-500")
+  # convert to string from date time and then encode to utf-8
+  time = DateTime.strptime("#{row['Timestamp']}-800", '%m/%d/%y %H:%M:%S %p%z').new_offset("-500").to_s.encode("UTF-8")
 
   # multiply the string 0 by the difference of 5 and the length of the original zip code, 
   # which then gets prepended to the original zip code
-  zip = "0" * ( 5 - row['ZIP'].length()) + row['ZIP']
+  zip = ("0" * ( 5 - row['ZIP'].length()) + row['ZIP']).encode("UTF-8")
 
+  full_name = row["FullName"].upcase.encode("UTF-8")
   
   # testing output
   puts time.to_s.encode("UTF-8")
   puts zip.encode("UTF-8")
+  puts full_name
 
   # save into new hash ensure utf-8 on object
 end

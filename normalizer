@@ -5,25 +5,29 @@ require 'date'
 # TODO: create options parser that will explain how this script will work
 
 # check to see if anything is passed to stdin
+# if not set the value to 1 that way we can raise an error
 input_csv = (STDIN.tty?) ? 1 : $stdin.read
 
-# fail if no stdin given
 raise "No STDIN given" if input_csv.equal?(1)
 
-# grab csv from standard out
 parsed_csv = CSV.parse(input_csv, headers: true)
 
-# iterate over each row / column
 parsed_csv.each do |row|
-
-
-  # for each row, check for validation against requirements in question
 
   # here we interpolate the timezone (US /PST) to be included in the row and then call 
   # new offset to get the time zone to be in US/EST
   time = DateTime.strptime("#{row['Timestamp']}-800", '%m/%d/%y %H:%M:%S %p%z').new_offset("-500")
-  puts time
 
+  # multiply the string 0 by the difference of 5 and the length of the original zip code, 
+  # which then gets prepended to the original zip code
+  zip = "0" * ( 5 - row['ZIP'].length()) + row['ZIP']
+
+  
+  # testing output
+  puts time.to_s.encode("UTF-8")
+  puts zip.encode("UTF-8")
+
+  # save into new hash ensure utf-8 on object
 end
 
 

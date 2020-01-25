@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require 'csv'
+require 'date'
 
 # TODO: create options parser that will explain how this script will work
 
@@ -11,3 +12,20 @@ raise "No STDIN given" if input_csv.equal?(1)
 
 # grab csv from standard out
 parsed_csv = CSV.parse(input_csv, headers: true)
+
+# iterate over each row / column
+parsed_csv.each do |row|
+
+
+  # for each row, check for validation against requirements in question
+
+  # here we interpolate the timezone (US /PST) to be included in the row and then call 
+  # new offset to get the time zone to be in US/EST
+  time = DateTime.strptime("#{row['Timestamp']}-800", '%m/%d/%y %H:%M:%S %p%z').new_offset("-500")
+  puts time
+
+end
+
+
+# save into new hash
+# at the end output as csv to stdout

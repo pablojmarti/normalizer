@@ -1,102 +1,23 @@
 #!/usr/bin/env ruby
-require 'csv'
-require 'date'
+
+# Loads in lib dir to use classes defined there
+$LOAD_PATH.unshift( File.join( File.dirname(__FILE__), 'lib' ) )
+
+# load custom classes
+require 'csv_parser'
+require 'data_normalizer'
 
 # TODO: create options parser that will explain how this script will work
-
-# TODO: Move to its own class 
-def normalize_duration(duration) 
-
-  # using this milliseconds converter array which has the conversions for milliseconds in this order:
-  # hour, minutes, seconds, ms
-  # we will split the duration into an array on the separators :,.
-  # from there we will loop through with the index which matches the conversion table and multiple the
-  # value by the conversion and at the end add up the total 
-  milliseconds_converter = [3600000, 60000, 1000, 1]
-
-  begin
-    duration_a = duration.split(/[:\.]/)
-    ms = duration_a.each_with_index.map {|time,i| time.to_i * milliseconds_converter[i]}.inject(0, :+)
-  rescue => e
-    $stderr.puts e
-  end
-
-  return ms
-end
-
-def parse_input()
-  # check to see if anything is passed to stdin
-  # if not set the value to 1 that way we can raise an error
-  input_csv = (STDIN.tty?) ? 1 : $stdin.read
-
-  raise "No STDIN given" if input_csv.equal?(1)
-
-  input_csv.encode!("UTF-8", :invalid => :replace, :undef => :replace)
-
-  begin
-    return parsed_csv = CSV.parse(input_csv, headers: true, encoding:'utf-8')
-  rescue => e
-    $stderr.puts e
-  end
-end
-
-def normalize_data(parsed_csv)
-
-  # In this function we create an empty output array 
-  # and loop through the parsed csv and normalize the data on each header
-  # for each row we create a new hash that will be pushed to the output array
-  output_array = []
-  parsed_csv.each do |row|
-    output_csv = {} 
-    output_csv[:Timestamp] = normalize_timestamp(row["Timestamp"]) 
-    output_csv[:ZIP] = normalize_zip(row["ZIP"])
-    output_csv[:FullName] = normalize_full_name(row["FullName"])
-    output_csv[:Address] = row["Address"]
-    output_csv[:FooDuration] = normalize_duration(row["FooDuration"])
-    output_csv[:BarDuration] = normalize_duration(row["BarDuration"])
-    output_csv[:TotalDuration] = output_csv[:FooDuration].to_i + output_csv[:BarDuration].to_i
-    output_csv[:Notes] = row["Notes"]
-
-    output_array.push(output_csv)
-  end
-
-  return output_array
-end
-
-def normalize_timestamp(timestamp)
-  # here we interpolate the timezone (US /PST) to be included in the row and then call 
-  # new offset to get the time zone to be in US/EST
-  # convert to string from date time and then encode to utf-8
-  return DateTime.strptime("#{timestamp}-800", '%m/%d/%y %H:%M:%S %p%z').new_offset("-500").to_s.encode("UTF-8")
-end
-
-def normalize_zip(zip)
-  # multiply the string 0 by the difference of 5 and the length of the original zip code, 
-  # which then gets prepended to the original zip code
-  return ("0" * ( 5 - zip.length()) + zip).encode("UTF-8")
-end
-
-def normalize_full_name(full_name)
-  return full_name.upcase
-end
-
-def create_stdout_csv(headers, output)
-  # returns generated CSV from given headers and output
-  # first we add the headers to the csv, then
-  # we iterate over the array of hashes and add the values of
-  # each hash to the csv file
-  return CSV.generate do |csv|
-    csv << headers
-    output.each do |h|
-      csv << h.values
-    end
-  end
-end
-
 def main()
-  parsed_csv = parse_input()
-  output = normalize_data(parsed_csv)
-  puts create_stdout_csv(parsed_csv.headers, output)
+
+  # initialize class variables
+  csv_parser = CSVParser.new()
+  data_normalizer = DataNormalizer.new()
+
+  parsed_csv = csv_parser.parse_input()
+  output = data_normalizer.normalize_data(parsed_csv)
+
+  puts csv_parser.create_stdout_csv(parsed_csv.headers, output)
 end
 
 main

@@ -11,7 +11,8 @@ class CSVParser
   end
 
   def create_stdout_csv(headers, output)
-    # returns generated CSV from given headers and output                                          code("UTF-8") 19     # first we add the headers to the csv, then
+    # returns generated CSV from given headers and output code("UTF-8")
+    # first we add the headers to the csv, then
     # we iterate over the array of hashes and add the values of
     # each hash to the csv file
     return CSV.generate do |csv|

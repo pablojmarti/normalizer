@@ -14,8 +14,8 @@ class DataNormalizer
     begin
       duration_a = duration.split(/[:\.]/)
       ms = duration_a.each_with_index.map {|time,i| time.to_i * milliseconds_converter[i]}.inject(0, :+)
-    rescue => e
-      $stderr.puts e
+    rescue 
+      return 1
     end
 
     return ms
@@ -38,6 +38,9 @@ class DataNormalizer
       output_csv[:TotalDuration] = output_csv[:FooDuration].to_i + output_csv[:BarDuration].to_i
       output_csv[:Notes] = row["Notes"]
 
+      # check for errors
+      next if output_csv.has_value?(1)
+
       output_array.push(output_csv)
     end
 
@@ -48,16 +51,31 @@ class DataNormalizer
     # here we interpolate the timezone (US /PST) to be included in the row and then call 
     # new offset to get the time zone to be in US/EST
     # convert to string from date time and then encode to utf-8
-    return DateTime.strptime("#{timestamp}-800", '%m/%d/%y %H:%M:%S %p%z').new_offset("-500").to_s.encode("UTF-8")
+    # TODO: Add error handlings if datetime is not parsable
+    begin
+      return DateTime.strptime("#{timestamp}-800", '%m/%d/%y %H:%M:%S %p%z').new_offset("-500").to_s.encode("UTF-8")
+    rescue
+      return 1
+    end
   end
 
   def normalize_zip(zip)
     # multiply the string 0 by the difference of 5 and the length of the original zip code, 
     # which then gets prepended to the original zip code
-    return ("0" * ( 5 - zip.length()) + zip).encode("UTF-8")
+    # TODO: add regex check to see if zip code is valid
+    begin
+      return ("0" * ( 5 - zip.length()) + zip).encode("UTF-8")
+    rescue
+      return 1
+    end
   end
 
   def normalize_full_name(full_name)
-    return full_name.upcase
+    # TODO: Add better error handling
+    begin
+      return full_name.upcase
+    rescue
+      return 1
+    end
   end
 end

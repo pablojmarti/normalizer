@@ -14,13 +14,11 @@ If you have a ruby version manager that responds to a .ruby-version file (rbenv)
 After pulling down the latest copy of master, you can use the following from the root of the repo to run the script
 
 ```
-./normalizer < CSVIN 
+./normalizer < /path/to/csv 
 ```
+This will output the formatted csv to the terminal.
 
-This will output to the terminal the formated CSV file
-
-From here you can pipe it into another csv file if needed
-
+Or pipe it to a file:
 ```
-./normalizer < CSVIN > output.csv
+./normalizer < /path/to/csv > output.csv
 ```

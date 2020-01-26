@@ -2,13 +2,7 @@ require 'csv'
 
 class CSVParser
 
-  def parse_input()
-    # check to see if anything is passed to stdin
-    # if not set the value to 1 that way we can raise an error
-    input_csv = (STDIN.tty?) ? 1 : $stdin.read
-    raise "No STDIN given" if input_csv.equal?(1)
-    input_csv.encode!("UTF-8", :invalid => :replace, :undef => :replace)
-
+  def parse_input(input_csv)
     begin 
       return parsed_csv = CSV.parse(input_csv, headers: true, encoding:'utf-8')
     rescue => e

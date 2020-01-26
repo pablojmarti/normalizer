@@ -19,7 +19,7 @@ usage = "usage: normalizer < STDIN STDOUT \n \tGiven a CSV passed through STDIN 
 input_csv = (STDIN.tty?) ? 1 : $stdin.read
 
 if input_csv.equal?(1)
-  puts "no STDIN given"
+  $stderr.puts "no STDIN given"
   puts usage
   exit 1
 end

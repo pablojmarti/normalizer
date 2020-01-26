@@ -7,17 +7,28 @@ $LOAD_PATH.unshift( File.join( File.dirname(__FILE__), 'lib' ) )
 require 'csv_parser'
 require 'data_normalizer'
 
-# TODO: create options parser that will explain how this script will work
-def main()
+# initialize class variables
+csv_parser = CSVParser.new()
+data_normalizer = DataNormalizer.new()
 
-  # initialize class variables
-  csv_parser = CSVParser.new()
-  data_normalizer = DataNormalizer.new()
+# creates usage message
+usage = "usage: normalizer < STDIN STDOUT \n \tGiven a CSV passed through STDIN normalizer will output to \n\tSTDOUT a normalized utf-8 version of the csv\n"
 
-  parsed_csv = csv_parser.parse_input()
-  output = data_normalizer.normalize_data(parsed_csv)
+# check to see if anything is passed to stdin
+# if not set the value to 1 that way we can raise an error
+input_csv = (STDIN.tty?) ? 1 : $stdin.read
 
-  puts csv_parser.create_stdout_csv(parsed_csv.headers, output)
+if input_csv.equal?(1)
+  puts usage
+  raise "No STDIN given" 
+  exit 1
 end
 
-main
+# parse csv and encode to uft-8 with replacing invalid or undefined characters
+input_csv.encode!("UTF-8", :invalid => :replace, :undef => :replace)
+
+
+parsed_csv = csv_parser.parse_input()
+output = data_normalizer.normalize_data(parsed_csv)
+
+puts csv_parser.create_stdout_csv(parsed_csv.headers, output)

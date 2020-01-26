@@ -5,13 +5,9 @@ Normalizing CSVs through a cli tool that takes in CSVs through stdin and will ou
 
 ### Prerequisites
 
-- ruby - 2.7.0 - using a ruby version tool helps a lot
+You will need ruby version 2.7.0 to run the program.
 
-```
-rbenv install 2.7.0
-```
-
-you can learn more about installing ruby [here](https://www.ruby-lang.org/en/downloads/)
+If you have a ruby version manager that responds to a .ruby-version file (rbenv), it should change automatically to the correct version if the manager already has the version installed.
 
 ### Up & Running
 

@@ -28,7 +28,7 @@ end
 input_csv.encode!("UTF-8", :invalid => :replace, :undef => :replace)
 
 
-parsed_csv = csv_parser.parse_input()
+parsed_csv = csv_parser.parse_input(input_csv)
 output = data_normalizer.normalize_data(parsed_csv)
 
 puts csv_parser.create_stdout_csv(parsed_csv.headers, output)

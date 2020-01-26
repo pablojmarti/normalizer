@@ -30,9 +30,9 @@ class DataNormalizer
     parsed_csv.each do |row|
       output_csv = {} 
       output_csv[:Timestamp] = normalize_timestamp(row["Timestamp"]) 
+      output_csv[:Address] = row["Address"]
       output_csv[:ZIP] = normalize_zip(row["ZIP"])
       output_csv[:FullName] = normalize_full_name(row["FullName"])
-      output_csv[:Address] = row["Address"]
       output_csv[:FooDuration] = normalize_duration(row["FooDuration"])
       output_csv[:BarDuration] = normalize_duration(row["BarDuration"])
       output_csv[:TotalDuration] = output_csv[:FooDuration].to_i + output_csv[:BarDuration].to_i

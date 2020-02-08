@@ -16,7 +16,7 @@ class DataNormalizer
       output_csv[:FullName] = normalize_full_name(row["FullName"])
       output_csv[:FooDuration] = normalize_duration(row["FooDuration"])
       output_csv[:BarDuration] = normalize_duration(row["BarDuration"])
-      output_csv[:TotalDuration] = output_csv[:FooDuration].to_i + output_csv[:BarDuration].to_i
+      output_csv[:TotalDuration] = output_csv[:FooDuration] + output_csv[:BarDuration]
       output_csv[:Notes] = row["Notes"]
 
       # check for errors
@@ -44,7 +44,7 @@ class DataNormalizer
       return 1
     end
 
-    return ms
+    return ms / 1000.0
   end
 
   def normalize_timestamp(timestamp)

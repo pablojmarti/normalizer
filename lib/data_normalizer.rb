@@ -2,25 +2,6 @@ require 'date'
 
 class DataNormalizer
 
-  def normalize_duration(duration) 
-
-    # using this milliseconds converter array which has the conversions for milliseconds in this order:
-    # hour, minutes, seconds, ms
-    # we will split the duration into an array on the separators :,.
-    # from there we will loop through with the index which matches the conversion table and multiple the
-    # value by the conversion and at the end add up the total 
-    milliseconds_converter = [3600000, 60000, 1000, 1]
-
-    begin
-      duration_a = duration.split(/[:\.]/)
-      ms = duration_a.each_with_index.map {|time,i| time.to_i * milliseconds_converter[i]}.inject(0, :+)
-    rescue 
-      return 1
-    end
-
-    return ms
-  end
-
   def normalize_data(parsed_csv)
 
     # In this function we create an empty output array 
@@ -45,6 +26,25 @@ class DataNormalizer
     end
 
     return output_array
+  end
+
+  def normalize_duration(duration) 
+
+    # using this milliseconds converter array which has the conversions for milliseconds in this order:
+    # hour, minutes, seconds, ms
+    # we will split the duration into an array on the separators :,.
+    # from there we will loop through with the index which matches the conversion table and multiple the
+    # value by the conversion and at the end add up the total 
+    milliseconds_converter = [3600000, 60000, 1000, 1]
+
+    begin
+      duration_a = duration.split(/[:\.]/)
+      ms = duration_a.each_with_index.map {|time,i| time.to_i * milliseconds_converter[i]}.inject(0, :+)
+    rescue 
+      return 1
+    end
+
+    return ms
   end
 
   def normalize_timestamp(timestamp)
